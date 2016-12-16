@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Mini Game</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="480" height="320"></canvas>
+
+<script>
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var obstacles = [];
+var offset = -2;
+var newObstacle = false;
+var GameOther = false;
+var goingUp = false;
+
+function Obstacle() {
+	this.x = 500;
+	this.y = 270;
+	this.width = 25;
+	this.height = 25;
+	this.color = "#FF0000";
+}
+
+function sprite() {
+	this.x = 50;
+	this.y = 270;
+	this.width = 25;
+	this.height = 25;
+	this.color = "#0095DD";
+}
+
+var playerSprite = new sprite();
+
+
+obstacles.push(new Obstacle());
+
+
+function draw() {
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	collision()
+
+	
+
+	obstacles.forEach(function(item){
+		if(item.x == 200){
+			newObstacle = true;
+		}else{
+			newObstacle = false;
+		}
+	});
+
+	if(newObstacle == true){
+		obstacles.push(new Obstacle());
+	}
+
+	obstacles.forEach(function(item){
+		ctx.beginPath();
+		ctx.rect(item.x += offset, item.y, item.width, item.height);
+		ctx.fillStyle = "#FF0000";
+		ctx.fill();
+		ctx.closePath();
+	});
+
+	jump();
+	drawSprite();
+
+
+
+}
+
+function drawSprite() {
+	ctx.beginPath();
+	ctx.rect(playerSprite.x, playerSprite.y, playerSprite.width, playerSprite.height);
+	ctx.fillStyle = playerSprite.color;
+	ctx.fill();
+	ctx.closePath();
+}
+
+function jump(){
+	if(goingUp == true) {
+		if(playerSprite.y < 200){
+			goingUp = false;
+		}
+		playerSprite.y += -3;
+	} else if(playerSprite.y < 270){
+		playerSprite.y += 3;
+	} 
+}
+
+function collision(){
+
+	obstacles.forEach(function(item){
+		//if((item.x == (playerSprite.x + playerSprite.width)) && ((playerSprite.y + playerSprite.height) > item.y)) {
+		//	GameOther = true;
+		//}
+		if((item.x < (playerSprite.x + playerSprite.width)) && item.x > (playerSprite.x)){
+			if(playerSprite.y + playerSprite.height > item.y)
+			clearInterval(myvar);
+		}
+	});
+
+}
+
+
+document.addEventListener("keydown", keyDownHandler, false)
+
+function keyDownHandler(e) {
+	if(e.keyCode == 38){
+		goingUp = true
+	}
+}
+
+myvar = setInterval(draw, 10);
+
+
+
+
+
+</script>
+
+</body>
+</html>
